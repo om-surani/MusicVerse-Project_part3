@@ -79,57 +79,36 @@ app.use((err, req, res, next) => {
 // This is what used to cause `relation "tracks" does not exist` 500 errors
 // on every page: the server would start even if `npm run migrate` had never
 // been run. Now we check first and fail fast with a clear message instead.
-async function start() {
-  try {
-    await sequelize.authenticate();
+async function initialize() {
 
-    // sync() (no force/alter) creates the "tracks" table if it's missing,
-    // but never touches or drops an existing table - safe to run every
-    // startup. It does NOT insert any data; that's still migrate.js's job.
-    await sequelize.sync();
+    try {
 
-    // sync() alone won't add new columns to a table that already exists
-    // (e.g. after pulling this update on a database that was migrated
-    // before the cover_image_url column existed). This is a no-op/safe
-    // to run every startup, and it preserves existing rows instead of
-    // requiring a destructive `npm run migrate` re-run.
-    await sequelize.query(
-      `ALTER TABLE IF EXISTS tracks ADD COLUMN IF NOT EXISTS cover_image_url VARCHAR(255);`
-    );
+        await sequelize.authenticate();
 
-    const count = await Track.count();
-    if (count === 0) {
-      console.warn(
-        '[startup] The "tracks" table is empty. Run `npm run migrate` in ' +
-          "another terminal to load the sample dataset."
-      );
+        console.log("✅ Connected to Neon PostgreSQL");
+
+    } catch (err) {
+
+        console.error("❌ Database initialization failed");
+
+        console.error(err);
+
     }
-  } catch (err) {
-    console.error(
-      "[startup] Could not connect to the database:",
-      err.message
-    );
-    console.error(
-      "[startup] Check that DATABASE_URL in .env is correct, then run " +
-        "`npm run migrate` before starting the server again."
-    );
-    process.exit(1);
-  }
 
-  app.listen(PORT, () => {
-    console.log(`MusicVerse server running at http://localhost:${PORT}`);
-  });
-
-  // Fetch each track's REAL cover/single art (Deezer, then iTunes as a
-  // fallback) in the background and cache it to data/coverArt.json.
-  // Not awaited on purpose: the site is usable immediately with the old
-  // genre icons, and pages start showing real photos (on refresh) as
-  // the lookups complete. Safe to skip entirely if there's no internet
-  // connection - it just logs a warning and every track keeps its
-  // genre icon.
-  warmCoverArtCache(tracksData).catch((err) => {
-    console.warn("[startup] Could not fetch cover art:", err.message);
-  });
 }
 
-start();
+initialize();
+
+// Export app for Vercel
+module.exports = app;
+
+// Start local server only when NOT running on Vercel
+if (!process.env.VERCEL) {
+
+    app.listen(PORT, () => {
+
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+
+    });
+
+}
