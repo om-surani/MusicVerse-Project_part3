@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <h1>MusicVerse</h1>
+  <p class="tagline">Discover artists, explore tracks, and dig into audio features &mdash; powered by a local Spotify-style dataset and an Express.js backend.</p>
+  <div class="hero-actions">
+    <a href="/items" class="btn btn-primary">Browse Tracks</a>
+    <a href="/search" class="btn btn-secondary">Search</a>
+  </div>
+  <p class="stat"><strong><%= totalTracks %></strong> tracks loaded from <code>data/tracks.json</code></p>
+</section>
+
+<section class="card-grid">
+  <div class="card">
+    <h3>🔍 Search</h3>
+    <p>Find tracks by artist name, track name, or genre.</p>
+  </div>
+  <div class="card">
+    <h3>🎚️ Filter & Sort</h3>
+    <p>Narrow results by genre, or sort by popularity and danceability.</p>
+  </div>
+  <div class="card">
+    <h3>🔗 JSON API</h3>
+    <p>Every page is backed by a matching JSON endpoint under <code>/api</code>.</p>
+  </div>
+</section>
+
+<section class="api-reference">
+  <h2>API Reference</h2>
+  <table class="route-table">
+    <thead>
+      <tr><th>Method</th><th>Route</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>GET</td><td><code>/api/items</code></td><td>All tracks (supports <code>?genre=</code>, <code>?minPopularity=</code>, <code>?sortBy=</code>)</td></tr>
+      <tr><td>GET</td><td><code>/api/items/:id</code></td><td>One track by id</td></tr>
+      <tr><td>GET</td><td><code>/api/search?keyword=</code></td><td>Search tracks</td></tr>
+      <tr><td>GET</td><td><code>/api/genres</code></td><td>Distinct list of genres</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<%- include('partials/footer') %>

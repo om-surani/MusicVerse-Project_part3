@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+<h1>Track Listing</h1>
+
+<a href="/items/new" class="btn btn-primary add-track-link">+ Add Track</a>
+
+<form class="filter-bar" method="GET" action="/items">
+  <label>
+    Genre
+    <select name="genre" onchange="this.form.submit()">
+      <option value="">All genres</option>
+      <% genres.forEach(g => { %>
+        <option value="<%= g %>" <%= selectedGenre === g ? 'selected' : '' %>><%= g %></option>
+      <% }) %>
+    </select>
+  </label>
+  <label>
+    Sort by
+    <select name="sortBy" onchange="this.form.submit()">
+      <option value="">Default</option>
+      <option value="popularity" <%= sortBy === 'popularity' ? 'selected' : '' %>>Popularity</option>
+      <option value="danceability" <%= sortBy === 'danceability' ? 'selected' : '' %>>Danceability</option>
+    </select>
+  </label>
+  <noscript><button type="submit" class="btn btn-primary">Apply</button></noscript>
+</form>
+
+<p class="result-count"><%= items.length %> track<%= items.length === 1 ? '' : 's' %> found</p>
+
+<div class="track-grid">
+  <% items.forEach(track => { %>
+    <a class="track-card" href="/items/<%= track.id %>">
+      <img class="track-cover" src="<%= track.cover %>" alt="<%= track.genre %> cover art" />
+      <span class="genre-tag"><%= track.genre %></span>
+      <h3><%= track.track_name %></h3>
+      <p class="artist"><%= track.artist_name %></p>
+      <div class="track-meta">
+        <span>⭐ <%= track.popularity %></span>
+        <span>💃 <%= track.audioFeatures.danceability %></span>
+      </div>
+    </a>
+  <% }) %>
+</div>
+
+<% if (items.length === 0) { %>
+  <p class="empty-state">No tracks match this filter.</p>
+<% } %>
+
+<%- include('partials/footer') %>

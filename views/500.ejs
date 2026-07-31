@@ -1,0 +1,9 @@
+<%- include('partials/header') %>
+
+<section class="not-found">
+  <h1>500</h1>
+  <p>Something went wrong on our end<% if (typeof message !== "undefined" && message) { %>: <%= message %><% } %></p>
+  <a href="/" class="btn btn-primary">Back to Home</a>
+</section>
+
+<%- include('partials/footer') %>

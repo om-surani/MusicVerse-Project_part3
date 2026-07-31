@@ -1,0 +1,52 @@
+<%- include('partials/header') %>
+
+<h1><%= item ? 'Edit Track' : 'Add a New Track' %></h1>
+
+<% if (typeof error !== "undefined" && error) { %>
+  <p class="form-error"><%= error %></p>
+<% } %>
+
+<form method="POST" action="<%= formAction %>" class="item-form">
+  <label>
+    Genre *
+    <input type="text" name="genre" required value="<%= item?.genre || '' %>" />
+  </label>
+
+  <label>
+    Artist Name *
+    <input type="text" name="artist_name" required value="<%= item?.artist_name || '' %>" />
+  </label>
+
+  <label>
+    Track Name *
+    <input type="text" name="track_name" required value="<%= item?.track_name || '' %>" />
+  </label>
+
+  <label>
+    Popularity (0-100)
+    <input type="number" name="popularity" min="0" max="100" value="<%= item?.popularity ?? '' %>" />
+  </label>
+
+  <label>
+    Duration (ms)
+    <input type="number" name="duration_ms" min="0" value="<%= item?.duration_ms ?? '' %>" />
+  </label>
+
+  <label>
+    Cover Image URL (optional)
+    <input
+      type="url"
+      name="cover_image_url"
+      placeholder="https://example.com/cover.jpg"
+      value="<%= item?.cover_image_url || '' %>"
+    />
+  </label>
+  <p class="form-hint">
+    Paste a direct link to an image to use as this track's cover art. Leave
+    blank to auto-assign one based on genre.
+  </p>
+
+  <button type="submit" class="btn btn-primary"><%= item ? 'Save Changes' : 'Add Track' %></button>
+</form>
+
+<%- include('partials/footer') %>

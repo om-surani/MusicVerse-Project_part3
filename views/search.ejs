@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+
+<section class="search-section">
+  <h1>Search Tracks</h1>
+  <p>Search by artist name, track name, or genre.</p>
+  <% if (typeof error !== "undefined" && error) { %>
+    <p class="form-error"><%= error %></p>
+  <% } %>
+  <form method="POST" action="/search" class="search-form">
+    <input
+      type="text"
+      name="keyword"
+      placeholder="e.g. Henri Salvador, Midnight, Jazz..."
+      autofocus
+    />
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</section>
+
+<%- include('partials/footer') %>

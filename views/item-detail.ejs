@@ -1,0 +1,42 @@
+<%- include('partials/header') %>
+
+<a href="/items" class="back-link">&larr; Back to all tracks</a>
+
+<article class="track-detail">
+  <img class="track-cover track-cover-large" src="<%= item.cover %>" alt="<%= item.genre %> cover art" />
+  <span class="genre-tag"><%= item.genre %></span>
+  <h1><%= item.track_name %></h1>
+  <h2 class="artist"><%= item.artist_name %></h2>
+
+  <div class="detail-grid">
+    <div class="detail-stat"><span>Popularity</span><strong><%= item.popularity %></strong></div>
+    <div class="detail-stat"><span>Duration</span><strong><%= Math.round(item.duration_ms / 1000) %>s</strong></div>
+    <div class="detail-stat"><span>Key</span><strong><%= item.audioFeatures.key %></strong></div>
+    <div class="detail-stat"><span>Mode</span><strong><%= item.audioFeatures.mode %></strong></div>
+    <div class="detail-stat"><span>Tempo</span><strong><%= item.audioFeatures.tempo %> BPM</strong></div>
+    <div class="detail-stat"><span>Time Signature</span><strong><%= item.audioFeatures.time_signature %>/4</strong></div>
+  </div>
+
+  <h3>Audio Features</h3>
+  <div class="feature-bars">
+    <% ['danceability','energy','valence','acousticness','instrumentalness','liveness','speechiness'].forEach(f => { %>
+      <div class="feature-row">
+        <span class="feature-label"><%= f %></span>
+        <div class="feature-bar"><div class="feature-fill" style="width: <%= item.audioFeatures[f] * 100 %>%"></div></div>
+        <span class="feature-value"><%= item.audioFeatures[f] %></span>
+      </div>
+    <% }) %>
+  </div>
+
+  <p class="track-id">Track ID: <code><%= item.track_id %></code></p>
+
+  <div class="track-actions">
+    <a href="/items/<%= item.id %>/edit" class="btn btn-secondary">Edit</a>
+    <form method="POST" action="/items/<%= item.id %>/delete" class="inline-form"
+          onsubmit="return confirm('Delete this track? This cannot be undone.');">
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+</article>
+
+<%- include('partials/footer') %>
